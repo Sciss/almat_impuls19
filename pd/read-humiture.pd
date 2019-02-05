@@ -1,0 +1,28 @@
+#N canvas 574 205 527 379 10;
+#X obj 119 174 shell;
+#X obj 169 177 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 119 205 unpack f f;
+#X floatatom 143 241 5 0 0 0 - - -;
+#X floatatom 176 261 5 0 0 0 - - -;
+#X text 31 262 Temperature [°C];
+#X obj 119 67 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 152 65 read current values;
+#X obj 119 92 t b b;
+#X msg 119 118 /home/pi/Documents/workshop/python/;
+#X obj 119 144 sprintf %s%s;
+#X text 59 11 Requires SunFounder Humiture DHT11 connected;
+#X msg 166 92 read_dht11.py;
+#X text 33 243 Humidity [%];
+#X text 58 26 to (GND \, 3.3V \, GPIO17);
+#X connect 0 0 2 0;
+#X connect 0 1 1 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 6 0 8 0;
+#X connect 8 0 9 0;
+#X connect 8 1 12 0;
+#X connect 9 0 10 0;
+#X connect 10 0 0 0;
+#X connect 12 0 10 1;
