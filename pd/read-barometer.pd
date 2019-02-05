@@ -1,0 +1,28 @@
+#N canvas 601 238 527 379 10;
+#X obj 119 174 shell;
+#X text 59 11 Requires SunFounder Barometer BMP180 connected;
+#X text 58 26 to (GND \, 3.3V \, SDA \, SDL) \, I2C enabled;
+#X obj 169 177 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 119 205 unpack f f;
+#X floatatom 143 241 5 0 0 0 - - -;
+#X floatatom 176 261 5 0 0 0 - - -;
+#X text 32 262 Pressure [Pa];
+#X text 31 242 Temperature [°C];
+#X obj 119 67 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 152 65 read current values;
+#X obj 119 92 t b b;
+#X msg 119 118 /home/pi/Documents/workshop/python/;
+#X msg 166 92 read_bmp180.py;
+#X obj 119 144 sprintf %s%s;
+#X connect 0 0 4 0;
+#X connect 0 1 3 0;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 9 0 11 0;
+#X connect 11 0 12 0;
+#X connect 11 1 13 0;
+#X connect 12 0 14 0;
+#X connect 13 0 14 1;
+#X connect 14 0 0 0;
