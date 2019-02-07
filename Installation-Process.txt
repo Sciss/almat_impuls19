@@ -1,0 +1,298 @@
+Download Raspbian Stretch Full from
+
+https://www.raspberrypi.org/downloads/raspbian/
+
+unzip 2018-11-13-raspbian-stretch-full.zip
+
+insert fresh 32 GB SD
+
+right click on 2018-11-13-raspbian-stretch-full.img and choose 'Open With Disk Image Writer'
+
+select destination (e.g. /dev/mmcblk0)
+
+boot the pi; it will first expand the SD card image to the full 32 GB
+
+pixel assistant comes up:
+
+leave country to UK, language to BE, timezone to London; check US keyboard
+
+enter new password (you know which one)
+
+connect to wifi if possible
+
+checks for updates; may take a while; may fail with slow wifi
+
+turn bluebooth off
+
+reboot; connect ethernet to internet
+
+sudo apt update; sudo apt dist-upgrade
+
+sudo apt purge wolfram-engine
+
+sudo apt install vim
+
+change screen resolution to 1280 x 768, so we have no trouble with the virtual desktops:
+
+sudo vi /boot/config.txt
+
+add 
+
+hdmi_group=2
+hdmi_mode=23 
+
+sudo raspi-config
+
+: localisation options -> time zone -> vienna
+: interfacing options -> enable ssh, enable vnc
+
+sudo reboot now
+
+desktop -> settings -> appearance > desktop -> disable wastebasket
+
+sudo apt purge openjdk-8-jre-headless
+sudo apt install openjdk-8-jdk
+
+sudo apt autoremove
+
+sudo apt install zita-njbridge
+
+sudo apt install audacity
+
+
+
+
+building supercollider (https://supercollider.github.io/development/building-raspberrypi)
+
+cd ~/Documents
+mkdir devel
+cd devel
+git clone https://github.com/supercollider/supercollider.git
+
+cd supercollider
+git checkout -b build-3.9.3 Version-3.9.3
+
+sudo apt-get install libjack-jackd2-dev libsndfile1-dev libasound2-dev libavahi-client-dev libreadline6-dev libfftw3-dev libxt-dev libudev-dev libcwiid-dev cmake qttools5-dev-tools libqt5webkit5-dev qtpositioning5-dev libqt5sensors5-dev qjackctl
+
+git submodule init && git submodule update
+
+mkdir build && cd build
+
+cmake -L -DCMAKE_BUILD_TYPE="Release" -DBUILD_TESTING=OFF -DSUPERNOVA=OFF -DNATIVE=ON -DSC_WII=ON -DSC_IDE=ON -DSC_QT=ON -DSC_ED=OFF -DSC_EL=OFF -DSC_VIM=ON ..
+
+sudo apt remove supercollider-server
+
+sudo make install
+sudo ldconfig
+
+
+
+processing:
+
+cd ~/Downloads
+curl https://processing.org/download/install-arm.sh | sudo sh
+rm install-arm.sh
+
+
+ScalaCollider: download .deb from archive.org/details/ScalaColliderSwing, sudo dpkg -i ...
+
+Mellite: download .deb from archive.org/details/Mellite, sudo dpkg -i ...
+
+Eisenkraut: .deb from github.com/Sciss/Eisenkraut/releases
+
+FScape: .deb from github.com/Sciss/FScape/releases
+
+Desktop -> Settings -> Menu Editor -> enable QJackCtl in sound
+
+run FScape once ; prefs submin dark
+
+
+
+sc-3 plugins:
+
+cd ~/Documents/devel
+git clone https://github.com/supercollider/sc3-plugins.git
+
+cd sc3-plugins
+git checkout -b build-dc2059a dc2059a6152d999111c2cc018d14651e62569e0a
+git submodule init && git submodule update
+mkdir build && cd build
+cmake -L -DCMAKE_BUILD_TYPE="Release" -DSUPERNOVA=OFF -DNATIVE=ON -DSC_PATH=../../supercollider/ ..
+make
+sudo make install
+
+
+directories:
+
+mkdir -p ~/Documents/workshop/pd
+mkdir -p ~/Documents/workshop/supercollider
+mkdir -p ~/Documents/workshop/processing
+
+
+java probs -- in the end we use 1.8.0_65 from oracle; not sure it's this:
+
+ http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+
+download linux arm64 201
+
+sudo tar zxvf jdk-8-linux-arm-vfp-hflt.tar.gz -C /opt
+sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0/bin/javac 1
+sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0/bin/java 1
+
+sudo update-alternatives --config javac
+sudo update-alternatives --config java
+
+in the last two, choose the last entry '3' which is jdk-8-oracle-arm32 (so why is this arm32 not arm64 ?)
+; i think it's not that one; we rm -r /opt/jdk1.8.0_201/ ;  probably the bug is using 64 instead 32 bit
+
+
+
+
+static eth0:
+
+sudo vi /etc/dhcpcd.conf 
+
+add lines
+
+interface eth0
+static ip_address=192.168.0.28/24
+
+
+disable vnc encryption
+
+generate encrypted password
+
+vncpasswd -print
+
+sudo vi /root/.vnc/config.d/vncserver-x11
+
+replace contents by
+
+Authentication=VncAuth
+Encryption=AlwaysOff
+Password=c3abbea3b003a0b2f88e94dc993cbc04
+
+
+set no-hdmi-connected console size for vnc:
+
+sudo vi /boot/config.txt
+
+uncomment and edit to:
+
+framebuffer_width=1280
+framebuffer_height=768
+
+
+
+pure-data:
+
+cd ~/Documents/devel/
+git clone https://github.com/pure-data/pure-data.git
+cd pure-data
+git checkout -b build-0.49-0 0.49-0
+
+sudo apt install build-essential automake autoconf libtool gettext libasound2-dev libjack-jackd2-dev
+
+sudo apt install tk
+
+./autogen.sh
+./configure --enable-jack
+make
+
+sudo make install
+
+
+
+cd ~/Documents/devel/
+git clone https://github.com/porres/pd-cyclone.git
+cd pd-cyclone
+make pdincludepath=/home/pi/Documents/devel/pure-data/src/
+
+make install objectsdir=../cyclone-build
+
+mv ../cyclone-build/cyclone ~/Documents/workshop/pd/externals/
+
+Also PD has wrong architecture defaults for find-externals. Should use user provided architecture `Linux-armv7-32`
+
+
+cd ~/Documents/devel/
+https://github.com/porres/Live-Electronics-Tutorial.git
+
+
+add PD to sound desktop menu
+
+
+SunFounder sensor code:
+
+
+cd ~/Documents/devel/
+git clone https://github.com/sunfounder/SunFounder_SensorKit_for_RPi2.git
+
+cd ~/Documents/devel/
+git clone https://github.com/sunfounder/Adafruit_Python_BMP.git
+cd Adafruit_Python_BMP
+sudo python3 setup.py install  # not sure this is needed, as SunFounder code doesn't run with Py3
+sudo python setup.py install
+
+sudo raspi-config
+
+-> Interface Options, enable I2C, reboot
+
+cd ~/Documents/devel/
+cd SunFounder_SensorKit_for_RPi2
+
+
+# not needed, as we have all of these
+# cf. https://github.com/sunfounder/SunFounder_SensorKit_for_RPi2/issues/4
+sudo apt install python-smbus i2c-tools build-essential python-dev python-smbus
+
+
+cd ~/Documents/devel/
+git clone https://git.iem.at/almat/almat_impuls19.git
+
+
+getting the DS18b20 to work:
+
+sudo vi /boot/config.txt
+
+enable or add:
+
+dtoverlay=w1-gpio
+
+(reboot)
+
+sudo modprobe w1-gpio
+sudo modprobe w1-therm
+
+(muss man das dann bei jedem boot machen, oder?)
+; sensor muss angeschlossen sein, dann erscheint
+; dir /sys/devices/w1_bus_master1/28-031604ce01ff
+
+
+ADS1115 Analog-Digital Converter:
+
+# muesste zu diesem zeitpunkt bereits alles da sein:
+sudo apt install build-essential python-dev python-smbus
+
+cd ~/Documents/devel/
+git clone https://github.com/adafruit/Adafruit_Python_ADS1x15.git
+cd Adafruit_Python_ADS1x15
+sudo python setup.py install
+
+
+
+pi camera fuer processing:
+
+raspi-config -> interfaces -> enable cam
+
+# cf. https://pi.processing.org/tutorial/camera/
+echo "bcm2835_v4l2" | sudo tee -a /etc/modules >/dev/null
+
+
+# enable GL rendering through VNC if necessary:
+https://discourse.processing.org/t/canvas-black-when-viewing-pi-via-vnc/8185
+
+
+
+
+
