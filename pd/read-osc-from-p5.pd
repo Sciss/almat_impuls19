@@ -1,0 +1,18 @@
+#N canvas 110 186 790 306 10;
+#X obj 176 79 unpackOSC;
+#X floatatom 176 189 5 0 0 0 - - -;
+#X obj 176 50 udpreceive 33333;
+#X obj 176 117 routeOSC /processing;
+#X obj 293 156 print UNKNOWN_MESSAGE;
+#X text 6 157 Assume we get messages with name /processing and two
+float arguments;
+#X obj 176 155 unpack f f;
+#X floatatom 233 188 5 0 0 0 - - -;
+#X text 323 46 Make sure you use the same port as the sender in Processing.
+The example patch in Processing is called "send_osc_messages";
+#X connect 0 0 3 0;
+#X connect 2 0 0 0;
+#X connect 3 0 6 0;
+#X connect 3 1 4 0;
+#X connect 6 0 1 0;
+#X connect 6 1 7 0;
