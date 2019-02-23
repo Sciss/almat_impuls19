@@ -1,0 +1,22 @@
+#N canvas 782 391 601 520 10;
+#X obj 118 140 send-osc-to-server hanns;
+#X obj 118 78 / 127;
+#X floatatom 118 106 5 0 0 0 - - -;
+#X obj 121 51 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 232 113 put your nick/name here;
+#X text 119 29 sending slider values;
+#X text 111 238 receiving slider values;
+#X obj 115 269 receive-osc-from-server flo;
+#X obj 115 302 unpack f;
+#X obj 115 332 * 127;
+#X text 184 299 assuming there is a float coming in;
+#X obj 117 363 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X text 299 264 put other person's nick/name here;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 11 0;

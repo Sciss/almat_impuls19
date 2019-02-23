@@ -1,0 +1,15 @@
+#N canvas 229 327 757 606 10;
+#X obj 177 135 unpackOSC;
+#X obj 246 258 print UNKNOWN_MESSAGE;
+#X obj 177 260 outlet;
+#X text 183 10 Receives data from the network;
+#X text 181 34 This abstraction requires an argument for the sender's
+nick/name;
+#X obj 177 183 routeOSC /pi;
+#X obj 177 221 route \$1;
+#X obj 177 93 udpreceive 57120;
+#X connect 0 0 5 0;
+#X connect 5 0 6 0;
+#X connect 5 1 1 0;
+#X connect 6 0 2 0;
+#X connect 7 0 0 0;

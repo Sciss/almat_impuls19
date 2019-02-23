@@ -1,0 +1,16 @@
+#N canvas 816 378 450 624 10;
+#X obj 69 223 read-osc-broadcast hh;
+#X floatatom 69 258 5 0 0 0 - - -;
+#X obj 67 173 write-osc-broadcast hh;
+#X floatatom 67 141 5 0 0 0 - - -;
+#X obj 80 51 metro 1000;
+#X obj 80 20 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X obj 195 45 counter 1 10;
+#X obj 198 75 / 10;
+#X connect 0 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;

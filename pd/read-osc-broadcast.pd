@@ -1,0 +1,19 @@
+#N canvas 229 327 757 606 10;
+#X obj 177 135 unpackOSC;
+#X obj 258 218 print UNKNOWN_MESSAGE;
+#X obj 177 93 udpreceive 18797;
+#X obj 177 260 outlet;
+#X obj 392 103 sprintf /data_\$1;
+#X obj 392 71 loadbang;
+#X obj 392 131 prepend set;
+#X obj 177 183 routeOSC /data;
+#X text 183 10 Receives data from the network;
+#X text 182 34 This abstraction requires an argument for the sender's
+initials;
+#X connect 0 0 7 0;
+#X connect 2 0 0 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 3 0;
+#X connect 7 1 1 0;
